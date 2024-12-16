@@ -1,21 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="https://aframe.org/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.min.js"></script>
 </head>
 <body style="margin: 0; overflow: hidden;">
     <a-scene embedded arjs>
-        <a-marker preset="hiro">
+        <a-entity camera>
             <a-box 
-                position="0 0.5 0" 
-                scale="0.1 0.1 0.1" 
-                material="color: pink; opacity: 0.8;"
-                rotation="0 45 0"
-                animation="property: rotation; to: 0 360 0; loop: true; dur: 5000"
+                position="0 0 -1" 
+                scale="0.05 0.05 0.05" 
+                material="color: red;"
             ></a-box>
-        </a-marker>
-        <a-entity camera></a-entity>
+        </a-entity>
     </a-scene>
 </body>
 </html>
