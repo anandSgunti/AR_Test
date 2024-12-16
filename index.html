@@ -5,7 +5,10 @@
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
     <style>
-      body { margin: 0; overflow: hidden; }
+      body { 
+        margin: 0; 
+        overflow: hidden; 
+      }
       #overlay {
         position: fixed;
         top: 0;
@@ -18,6 +21,7 @@
         justify-content: center;
         align-items: center;
         z-index: 1000;
+        text-align: center;
       }
     </style>
   </head>
@@ -27,14 +31,13 @@
     </div>
 
     <a-scene 
-      mindar-image="imageTargetSrc: targets.mind; 
-                    autoStart: false; 
-                    filterMinCF: 1000; 
-                    filterBeta: 0.001"
+      mindar-image="
+        imageTargetSrc: targets.mind; 
+        autoStart: false"
+      color-space="sRGB" 
+      renderer="colorManagement: true, physicallyCorrectLights" 
       vr-mode-ui="enabled: false" 
-      device-orientation-permission-ui="enabled: false"
-      loading-screen="enabled: false"
-      ar>
+      device-orientation-permission-ui="enabled: false">
       
       <a-assets>
         <a-asset-item id="logo-model" src="logo.glb"></a-asset-item>
@@ -56,42 +59,40 @@
           gltf-model="#logo-model"
           position="0 0.4 0"
           rotation="0 0 0"
-          scale="0.5 0.5 0.5">
+          scale="0.5 0.5 0.5"
+          animation="
+            property: position; 
+            to: 0 0.5 0; 
+            dur: 1000; 
+            easing: easeInOutQuad; 
+            loop: true; 
+            dir: alternate">
         </a-entity>
       </a-entity>
     </a-scene>
 
     <script>
-      const startButton = document.getElementById('overlay');
+      const overlay = document.getElementById('overlay');
       const scene = document.querySelector('a-scene');
 
-      // Ensure AFRAME is fully loaded
-      if (window.AFRAME) {
-        setupARScene();
-      } else {
-        window.addEventListener('load', setupARScene);
-      }
+      overlay.addEventListener('click', () => {
+        overlay.style.display = 'none';
+        scene.setAttribute('mindar-image', 'autoStart: true');
+      });
 
-      function setupARScene() {
-        startButton.addEventListener('click', () => {
-          startButton.style.display = 'none';
-          scene.setAttribute('mindar-image', 'autoStart: true');
-        });
+      scene.addEventListener('arError', (error) => {
+        console.error('AR Error:', error);
+        overlay.textContent = 'AR Error: ' + error.detail.error;
+        overlay.style.display = 'flex';
+      });
 
-        scene.addEventListener('arError', (error) => {
-          console.error('AR Error:', error);
-          startButton.textContent = 'AR Error: ' + error.detail.error;
-          startButton.style.display = 'flex';
-        });
+      scene.addEventListener('targetFound', () => {
+        console.log('Target found');
+      });
 
-        scene.addEventListener('targetFound', (event) => {
-          console.log('Target found');
-        });
-
-        scene.addEventListener('targetLost', (event) => {
-          console.log('Target lost');
-        });
-      }
+      scene.addEventListener('targetLost', () => {
+        console.log('Target lost');
+      });
     </script>
   </body>
 </html>
