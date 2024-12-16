@@ -2,8 +2,8 @@
 <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
     <style>
       body { margin: 0; overflow: hidden; }
       #overlay {
@@ -65,24 +65,33 @@
       const startButton = document.getElementById('overlay');
       const scene = document.querySelector('a-scene');
 
-      startButton.addEventListener('click', () => {
-        startButton.style.display = 'none';
-        scene.setAttribute('mindar-image', 'autoStart: true');
-      });
+      // Ensure AFRAME is fully loaded
+      if (window.AFRAME) {
+        setupARScene();
+      } else {
+        window.addEventListener('load', setupARScene);
+      }
 
-      scene.addEventListener('arError', (error) => {
-        console.error('AR Error:', error);
-        startButton.textContent = 'AR Error: ' + error.detail.error;
-        startButton.style.display = 'flex';
-      });
+      function setupARScene() {
+        startButton.addEventListener('click', () => {
+          startButton.style.display = 'none';
+          scene.setAttribute('mindar-image', 'autoStart: true');
+        });
 
-      scene.addEventListener('targetFound', (event) => {
-        console.log('Target found');
-      });
+        scene.addEventListener('arError', (error) => {
+          console.error('AR Error:', error);
+          startButton.textContent = 'AR Error: ' + error.detail.error;
+          startButton.style.display = 'flex';
+        });
 
-      scene.addEventListener('targetLost', (event) => {
-        console.log('Target lost');
-      });
+        scene.addEventListener('targetFound', (event) => {
+          console.log('Target found');
+        });
+
+        scene.addEventListener('targetLost', (event) => {
+          console.log('Target lost');
+        });
+      }
     </script>
   </body>
 </html>
