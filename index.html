@@ -1,47 +1,42 @@
+<!DOCTYPE html>
 <html>
-  <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
-  </head>
-  <body>
-    <a-scene
-      mindar-image="imageTargetSrc: targets.mind"
-      color-space="sRGB"
-      renderer="colorManagement: true, physicallyCorrectLights"
-      vr-mode-ui="enabled: false"
-      device-orientation-permission-ui="enabled: false"
-    >
-      <!-- Load custom assets -->
-      <a-assets>
-        <img id="customImage" src="mednet.jpg" />
-        <a-asset-item id="customModel" src="logo1.glb"></a-asset-item>
-      </a-assets>
-
-      <!-- Set up camera -->
-      <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
-
-      <!-- Place 3D model and image plane -->
-      <a-entity mindar-image-target="targetIndex: 0">
-        <!-- Custom Image Plane -->
-        <a-plane
-          src="#customImage"
-          position="0 0 0"
-          height="0.552"
-          width="1"
-          rotation="0 0 0"
-        ></a-plane>
-
-        <!-- Custom 3D Model -->
-        <a-gltf-model
-          src="#customModel"
-          rotation="-20 0 0"
-          position="0 0 0.1"
-          scale="1 1 1"
-          animation="property: position; to: 0 0.1 0.1; dur: 1000; easing: easeInOutQuad; loop: true; dir: alternate"
-        >
-        </a-gltf-model>
-      </a-entity>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AR.js Model Viewer</title>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+</head>
+<body style="margin: 0; overflow: hidden;">
+    <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;">
+        <a-marker preset="hiro">
+            <a-entity
+                gltf-model="logo.glb"
+                scale="0.1 0.1 0.1"
+                position="0 0 0"
+                rotation="-90 0 0"
+                class="clickable"
+                gesture-handler>
+            </a-entity>
+        </a-marker>
+        <a-entity camera></a-entity>
     </a-scene>
-  </body>
+
+    <div id="message" style="position: fixed; top: 10px; left: 10px; background-color: white; padding: 10px; display: none;">
+        You tapped the model!
+    </div>
+
+    <script>
+        AFRAME.registerComponent('gesture-handler', {
+            init: function () {
+                this.el.addEventListener('click', function (evt) {
+                    document.getElementById('message').style.display = 'block';
+                    setTimeout(function() {
+                        document.getElementById('message').style.display = 'none';
+                    }, 2000);
+                });
+            }
+        });
+    </script>
+</body>
 </html>
