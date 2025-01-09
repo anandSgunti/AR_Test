@@ -4,7 +4,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MindAR Web AR Application</title>
   
+  <!-- Important: Load A-Frame first, then MindAR -->
+  <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.1.5/dist/mindar-image.prod.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.1.5/dist/mindar-image-aframe.prod.js"></script>
+  
   <style>
+    body {
+      margin: 0;
+    }
     .example-container {
       position: relative;
       width: 100%;
@@ -21,16 +29,17 @@
   </style>
 </head>
 <body>
-  <a-scene mindar-image="imageTargetSrc: ./targets_1.mind;" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+  <!-- Remove device-orientation-permission-ui to avoid issues on some devices -->
+  <a-scene mindar-image="imageTargetSrc: ./targets_1.mind;" vr-mode-ui="enabled: false" embedded color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" window-size="800 600" mindar-image-target="smoothCount: 0">
+    <a-assets>
+      <img id="target-image" src="./top.gif" />
+    </a-assets>
+
     <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+    
     <a-entity mindar-image-target="targetIndex: 0">
-      <a-plane src="./top.gif" position="0 0 0" height="1" width="1" rotation="0 0 0"></a-plane>
+      <a-plane src="#target-image" position="0 0 0" height="1" width="1" rotation="0 0 0"></a-plane>
     </a-entity>
   </a-scene>
-
-  <!-- Load scripts at the end of body -->
-  <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.1.5/dist/mindar-image.prod.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.1.5/dist/mindar-image-aframe.prod.js"></script>
 </body>
 </html>
